@@ -1,2 +1,2 @@
-# Simple-GSON
-Simple GSON parser with auto creating files
+# SGson
+Simple Gson parser with auto creating files
