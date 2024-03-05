@@ -3,62 +3,73 @@ package com.zeydie.sgson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.logging.Logger;
-
+@Log
 public class SGsonBase {
-    private final Logger logger = Logger.getLogger("SGson");
-
-    public final void info(@NotNull final String message, final Object... args) {
-        if (this.debugging)
-            this.logger.info(String.format(message, args));
-    }
-
-    public final void warning(@NotNull final String message, final Object... args) {
-        if (this.debugging)
-            this.logger.warning(String.format(message, args));
-    }
-
     @Getter
     private Gson gson;
     @Getter
     private boolean debugging;
 
     public SGsonBase() {
-        this(new GsonBuilder().setPrettyPrinting());
+        this(new GsonBuilder());
     }
 
-    public <G extends GsonBuilder> SGsonBase(@NotNull final G gsonBuilder) {
+    public <G extends GsonBuilder> SGsonBase(@NonNull final G gsonBuilder) {
         this(gsonBuilder.create());
     }
 
-    public <G extends Gson> SGsonBase(@NotNull final G gson) {
+    public <G extends Gson> SGsonBase(@NonNull final G gson) {
         this.gson = gson;
     }
 
-    public final <G extends GsonBuilder> void setGsonBuilder(@NotNull final G gsonBuilder) {
-        this.setGson(gsonBuilder.create());
+    public @NotNull <G extends GsonBuilder, O extends SGsonBase> O setGsonBuilder(@NonNull final G gsonBuilder) {
+        return this.setGson(gsonBuilder.create());
     }
 
-    public SGsonBase setDebug() {
+    public @NotNull <G extends Gson, O extends SGsonBase> O setGson(final @NonNull G gson) {
+        this.gson = gson;
+
+        return (O) this;
+    }
+
+    public @NotNull <O extends SGsonBase> O setPretty() {
+        return this.setGsonBuilder(this.gson.newBuilder().setPrettyPrinting());
+    }
+
+    public @NotNull <O extends SGsonBase> O setDebug() {
         this.debugging = true;
 
-        return this;
+        return (O) this;
     }
 
-    public <G extends Gson> SGsonBase setGson(final @NotNull G gson) {
-        this.gson = gson;
-
-        return this;
-    }
-
-    @NotNull
-    public <O> String fromObjectToJson(@NotNull final O object) {
+    public @NotNull <O> String fromObjectToJson(@NonNull final O object) {
         return this.gson.toJson(object);
     }
 
-    public <O, S extends String> O fromJsonToObject(@NotNull final S json, @NotNull final O object) {
+    public @NotNull <O, S extends String> O fromJsonToObject(
+            @NonNull final S json,
+            @NonNull final O object
+    ) {
         return (O) this.gson.fromJson(json, object.getClass());
+    }
+
+    public final void info(
+            @NonNull final String message,
+            final Object... args
+    ) {
+        if (this.debugging)
+            log.info(String.format(message, args));
+    }
+
+    public final void warning(
+            @NonNull final String message,
+            final Object... args
+    ) {
+        if (this.debugging)
+            log.warning(String.format(message, args));
     }
 }

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.zeydie.sgson.streams.FileReaderStream;
 import com.zeydie.sgson.streams.FileWriterStream;
 import lombok.Getter;
+import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -13,36 +14,36 @@ import java.nio.file.Paths;
 
 public class SGsonFile extends SGsonBase {
     @Getter
-    @NotNull
-    private final File file;
+    private final @NotNull File file;
 
     @Getter
-    @NotNull
-    private final FileReaderStream fileReaderStream;
+    private final @NotNull FileReaderStream fileReaderStream;
     @Getter
-    @NotNull
-    private final FileWriterStream fileWriterStream;
+    private final @NotNull FileWriterStream fileWriterStream;
 
-    /**
-     * Init
-     */
-    public <S extends String> SGsonFile(@NotNull final S path) {
+    public <S extends String> SGsonFile(@NonNull final S path) {
         this(Paths.get(path));
     }
 
-    public <P extends Path> SGsonFile(@NotNull final P path) {
+    public <P extends Path> SGsonFile(@NonNull final P path) {
         this(path.toFile());
     }
 
-    public <F extends File> SGsonFile(@NotNull final F file) {
-        this(file, new GsonBuilder().setPrettyPrinting());
+    public <F extends File> SGsonFile(@NonNull final F file) {
+        this(file, new GsonBuilder());
     }
 
-    public <F extends File, G extends GsonBuilder> SGsonFile(@NotNull final F file, @NotNull final G gsonBuilder) {
+    public <F extends File, G extends GsonBuilder> SGsonFile(
+            @NonNull final F file,
+            @NonNull final G gsonBuilder
+    ) {
         this(file, gsonBuilder.create());
     }
 
-    public <F extends File, G extends Gson> SGsonFile(@NotNull final F file, @NotNull final G gson) {
+    public <F extends File, G extends Gson> SGsonFile(
+            @NonNull final F file,
+            @NonNull final G gson
+    ) {
         super(gson);
 
         this.file = file;
@@ -51,32 +52,29 @@ public class SGsonFile extends SGsonBase {
         this.fileWriterStream = new FileWriterStream(this);
     }
 
-    /**
-     * Methods
-     */
-    @NotNull
-    public final <T> T fromJsonToObject(@NotNull final T object) {
+    public final @NotNull <T> T fromJsonToObject(@NonNull final T object) {
         return this.fromJsonToObject(object, false);
     }
 
-    @NotNull
-    public final <T> T fromJsonToObject(@NotNull final T object, final boolean rewrite) {
+    public final @NotNull <T> T fromJsonToObject(
+            @NonNull final T object,
+            final boolean rewrite
+    ) {
         if (rewrite || !this.file.exists() || this.file.length() <= 0)
             this.writeJsonFile(this.fromObjectToJson(object));
 
         return this.fromJsonToObject(this.getJsonFile(), object);
     }
 
-    @NotNull
-    public final String getJsonFile() {
+    public final @NotNull String getJsonFile() {
         return this.fileReaderStream.getJsonFile();
     }
 
-    public final <O> void writeJsonFile(@NotNull final O object) {
+    public final <O> void writeJsonFile(@NonNull final O object) {
         this.writeJsonFile(this.fromObjectToJson(object));
     }
 
-    public final <S extends CharSequence> void writeJsonFile(@NotNull final S json) {
+    public final <S extends CharSequence> void writeJsonFile(@NonNull final S json) {
         this.fileWriterStream.writeJsonFile(json);
     }
 }

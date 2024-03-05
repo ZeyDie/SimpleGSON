@@ -1,38 +1,34 @@
 package com.zeydie.sgson.streams;
 
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import com.zeydie.sgson.SGsonFile;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class FileReaderStream {
     @Getter
-    private final File file;
+    private final @NotNull File file;
 
-    public FileReaderStream(@NotNull final SGsonFile gsonFile) {
+    public FileReaderStream(@NonNull final SGsonFile gsonFile) {
         this.file = gsonFile.getFile();
     }
 
-    @NotNull
-    public String getJsonFile() {
-        final StringBuilder json = new StringBuilder();
-
-        this.getLines().forEach(string -> json.append(string).append("\n"));
-
-        return json.toString();
+    public @NotNull String getJsonFile() {
+        return this.getLines()
+                .stream()
+                .map(String::toString)
+                .collect(Collectors.joining());
     }
 
-    @NotNull
-    public List<String> getLines() {
-        try {
-            return Files.readAllLines(this.file.toPath(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @SneakyThrows
+    public @NotNull List<String> getLines() {
+        return Files.readAllLines(this.file.toPath(), StandardCharsets.UTF_8);
     }
 }
