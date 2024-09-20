@@ -64,4 +64,10 @@ public final class SGsonFileTest {
         folder.delete();
         Assertions.assertFalse(folder.exists());
     }
+
+    @AfterAll
+    public static void accessibility() {
+        //NO create(path)!
+        SGsonFile.createPretty(path).writeJsonFile("");
+    }
 }

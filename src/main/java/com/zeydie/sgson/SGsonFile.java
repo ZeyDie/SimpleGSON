@@ -66,6 +66,18 @@ public class SGsonFile extends SGsonBase {
         return new SGsonFile(file);
     }
 
+    public static <S extends String> @NotNull SGsonFile createPretty(@NonNull final S path) {
+        return new SGsonFile(path).setPretty();
+    }
+
+    public static <P extends Path> @NotNull SGsonFile createPretty(@NonNull final P path) {
+        return new SGsonFile(path).setPretty();
+    }
+
+    public static <F extends File> @NotNull SGsonFile createPretty(@NonNull final F file) {
+        return new SGsonFile(file).setPretty();
+    }
+
     public final @NotNull <T> T fromJsonToObject(@NonNull final T object) {
         return this.fromJsonToObject(object, false);
     }
