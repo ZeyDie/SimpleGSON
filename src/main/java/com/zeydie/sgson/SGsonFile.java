@@ -44,12 +44,26 @@ public class SGsonFile extends SGsonBase {
             @NonNull final F file,
             @NonNull final G gson
     ) {
-        super(gson);
+        super();
+
+        this.setGson(gson);
 
         this.file = file;
 
         this.fileReaderStream = new FileReaderStream(this);
         this.fileWriterStream = new FileWriterStream(this);
+    }
+
+    public static <S extends String> @NotNull SGsonFile create(@NonNull final S path) {
+        return new SGsonFile(path);
+    }
+
+    public static <P extends Path> @NotNull SGsonFile create(@NonNull final P path) {
+        return new SGsonFile(path);
+    }
+
+    public static <F extends File> @NotNull SGsonFile create(@NonNull final F file) {
+        return new SGsonFile(file);
     }
 
     public final @NotNull <T> T fromJsonToObject(@NonNull final T object) {

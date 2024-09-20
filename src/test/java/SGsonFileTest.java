@@ -15,7 +15,7 @@ public final class SGsonFileTest {
 
     @BeforeAll
     public static void build() {
-        sGsonFile = new SGsonFile(path)
+        sGsonFile = SGsonFile.create(path)
                 .setPretty()
                 .setDebug();
 

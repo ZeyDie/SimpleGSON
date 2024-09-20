@@ -15,15 +15,15 @@ public class SGsonBase {
     private boolean debugging;
 
     public SGsonBase() {
-        this(new GsonBuilder());
+        this.setDefaultGsonBuilder();
     }
 
-    public <G extends GsonBuilder> SGsonBase(@NonNull final G gsonBuilder) {
-        this(gsonBuilder.create());
+    public void setDefaultGsonBuilder() {
+        this.setGsonBuilder(new GsonBuilder());
     }
 
-    public <G extends Gson> SGsonBase(@NonNull final G gson) {
-        this.gson = gson;
+    public static @NotNull SGsonBase create() {
+        return new SGsonBase();
     }
 
     public @NotNull <G extends GsonBuilder, O extends SGsonBase> O setGsonBuilder(@NonNull final G gsonBuilder) {

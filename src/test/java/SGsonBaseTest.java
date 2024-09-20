@@ -11,7 +11,7 @@ public final class SGsonBaseTest {
 
     @BeforeAll
     public static void build() {
-        sGsonBase = new SGsonBase()
+        sGsonBase = SGsonBase.create()
                 .setPretty()
                 .setDebug();
 
@@ -24,7 +24,7 @@ public final class SGsonBaseTest {
         val data = new Data();
 
         data.setName("Daniel");
-        data.setAge(22);
+        data.setAge(23);
         data.setGenius(true);
 
         stringOfObject = sGsonBase.fromObjectToJson(data);
